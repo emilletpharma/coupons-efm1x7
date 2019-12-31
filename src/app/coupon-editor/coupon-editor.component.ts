@@ -24,7 +24,7 @@ import { withLatestFrom, map, filter } from "rxjs/operators";
 })
 export class CouponEditorComponent {
   coupon$ = new Subject<Coupon>();
-  selection: Coupon;
+  //selection: Coupon;
   couponList$ = new BehaviorSubject<Array<Coupon>>([new Coupon(new Date(), "A", "Z"), new Coupon(new Date(), "A", "R")]);
   renderedList$ = new BehaviorSubject<Array<Coupon>>([]);
   formGroup: FormGroup;
@@ -48,8 +48,6 @@ export class CouponEditorComponent {
     this.processSaving();
 
     this.sub.add(this.couponList$.subscribe(v => (this.currentList = v)));
-
-    
   }
 
   // rendering managment
