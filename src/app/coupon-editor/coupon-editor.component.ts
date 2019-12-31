@@ -62,7 +62,7 @@ export class CouponEditorComponent {
         ([sort, list]) => {
           const asc = sort === SortType.Asc;
           const l = list.sort((a, b) => (asc ? a : b).date.getTime() - (asc ? b : a).date.getTime());
-          this.renderedList$.next(l);
+          this.renderedList$.next([...l]);
           this.coupon$.next(l.length > 0 ? l[0] : new Coupon());
         })
     );
