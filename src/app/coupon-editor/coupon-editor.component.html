@@ -1,0 +1,113 @@
+<div class="container">
+
+	<div class="header">
+		<div class="title bold">Configuration des offres promotionnelles</div>
+		<button mat-flat-button class="primary" (click)="buttonAction$.next(buttonActionType.Create)">Nouvelle offre</button>
+	</div>
+
+	<div class="content">
+
+		<div class="left-panel">
+			<table mat-table [dataSource]="renderedList$ | async">
+				<ng-container matColumnDef="name">
+					<th mat-header-cell *matHeaderCellDef>
+						<div class="frame">
+							<div class="title">Organiser par Date</div>
+						</div>
+						<div *ngIf="sort$ | async as sort">
+							<button mat-icon-button (click)="sort$.next(sort === sortType.Asc ? sortType.Desc : sortType.Asc)">
+             <mat-icon *ngIf="sort === sortType.Asc">arrow_upward</mat-icon>
+             <mat-icon *ngIf="sort !== sortType.Asc">arrow_downward</mat-icon>
+        </button>
+						</div>
+					</th>
+					<td mat-cell *matCellDef="let item">
+						<div class="cell">
+							{{item.name}}
+						</div>
+					</td>
+				</ng-container>
+
+				<tr mat-header-row *matHeaderRowDef="displayedColumns" ></tr>
+      <tr mat-row [class]="item === selection ? 'selection' : ''" *matRowDef="let item; columns: displayedColumns;" (click)="selection = item"></tr>
+			</table>
+		</div>
+
+		<div class="space"></div>
+
+		<div class="right-panel">
+			<div class="frame">
+				<div class="header">
+					<div class="title bold">Paramètres de l'offre</div>
+					<button mat-flat-button class="secondary" (click)="buttonAction$.next(buttonActionType.Delete)" [disabled]="(coupon$ | async)?.id === undefined">Supprimer l'offre</button>
+				</div>
+
+				<form [formGroup]="formGroup" class="vertical">
+					<mat-form-field appearance="outline" *ngFor="let identity of itemGroupData.identityItemList">
+						<mat-label>{{identity.hint}}</mat-label>
+						<input matInput [formControlName]="identity.type">
+					</mat-form-field>
+				</form>
+
+				<div class="horizontal">
+					<div class="vertical">
+						<div *ngFor="let validity of itemGroupData.validityItemList" class="bold right-space">
+							{{validity.title}}
+						</div>
+					</div>
+
+					<div class="vertical">
+						<mat-checkbox *ngFor="let validity of itemGroupData.validityItemList"
+							(change)="checkBoxAction$.next(validity.type)" class="right-space form-raw"
+							[checked]="validity.type === itemType.FromDate ? formGroup.value.fromDate : formGroup.value.toDate">
+							{{validity.subtitle}}
+						</mat-checkbox>
+					</div>
+
+					<form [formGroup]="formGroup" class="vertical">
+						<mat-form-field *ngFor="let validityItem of itemGroupData.validityItemList as validityItems"
+							appearance="outline" class="form-raw ">
+							<input matInput
+              [min]="validityItem.type === itemType.ToDate ? formGroup.value.fromDate : null"
+              [max]="validityItem.type === itemType.FromDate ? formGroup.value.toDate : null"
+              [formControlName]="validityItem.type"
+              [matDatepicker]="picker"
+              placeholder={{validityItem.hint}}>
+							<mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+							<mat-datepicker #picker></mat-datepicker>
+						</mat-form-field>
+					</form>
+
+				</div>
+				<div class="horizontal">
+					<div class="vertical">
+						<div *ngFor="let param of itemGroupData.paramItemList" class="right-space bold form-raw">
+							{{param.title}}
+						</div>
+					</div>
+					<form [formGroup]="formGroup" class="vertical">
+						<mat-form-field *ngFor="let param of itemGroupData.paramItemList" appearance="outline"
+							class="right-space form-raw">
+							<mat-label>{{param.hint}}</mat-label>
+							<input [formControlName]="param.type" type="number" matInput>
+            </mat-form-field>
+					</form>
+					<div class="vertical">
+						<div *ngFor="let param of itemGroupData.paramItemList" class="right-space form-raw">
+							{{param.unit}}
+						</div>
+					</div>
+				</div>
+				<div class="horizontal-reverse">
+					<button mat-flat-button
+          class="primary"
+          [disabled]="(formGroup.statusChanges | async) !== 'VALID'"
+          (click)="buttonAction$.next(buttonActionType.Save)"
+          >Enregistrer</button>
+				</div>
+			</div>
+		</div>
+
+		<div class="space"></div>
+	</div>
+</div>
