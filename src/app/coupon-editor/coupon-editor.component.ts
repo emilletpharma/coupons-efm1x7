@@ -25,7 +25,7 @@ import { withLatestFrom, map, filter } from "rxjs/operators";
 export class CouponEditorComponent {
   coupon$ = new Subject<Coupon>();
   //selection: Coupon;
-  couponList$ = new BehaviorSubject<Array<Coupon>>([new Coupon(new Date(), "A", "Z"), new Coupon(new Date(), "A", "R")]);
+  couponList$ = new BehaviorSubject<Array<Coupon>>([]);
   renderedList$ = new BehaviorSubject<Array<Coupon>>([]);
   formGroup: FormGroup;
   formGroupData$: Observable<FormGroupData>;
@@ -41,6 +41,7 @@ export class CouponEditorComponent {
   
   currentList: Array<Coupon>;
 
+
   constructor(private formBuilder: FormBuilder) {
     this.processRendering();
     this.processDeletion();
@@ -48,6 +49,8 @@ export class CouponEditorComponent {
     this.processSaving();
 
     this.sub.add(this.couponList$.subscribe(v => (this.currentList = v)));
+
+      this.couponList$.next([new Coupon(new Date(), "A", "Z"), new Coupon(new Date(), "A", "R")]);
   }
 
   // rendering managment
@@ -60,8 +63,8 @@ export class CouponEditorComponent {
         ([sort, list]) => {
           const asc = sort === SortType.Asc;
           const l = list.sort((a, b) => (asc ? a : b).date.getTime() - (asc ? b : a).date.getTime());
-          this.renderedList$.next([...l]);
           this.coupon$.next(l.length > 0 ? l[0] : new Coupon());
+          this.renderedList$.next([...l]);
         })
     );
 
