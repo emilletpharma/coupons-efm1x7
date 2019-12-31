@@ -63,17 +63,25 @@
             }
           }
         }
-
+        
+        tr:hover {
+          background: lightcyan;
+        }
+        
         .selected {
-    //background-color: brown;
-    color: #FFF;
-}
+          background: lightgray;
+        }
         
         tr {
           //background: yellow;
           height: 50px;
+
+
+
+
           
           td {
+            
             vertical-align: middle;
             //background: green;
             
@@ -167,19 +175,10 @@ button {
   flex-direction: column;
 }
 
-* .selected {
-  background-color: brown;
-  color: #FFF;
-}
 
 
-.mat-row:hover {
-  background-color: lightcyan;
-}
 
-.selection {
-  background: lightgray;
-}
+
 
 
 
